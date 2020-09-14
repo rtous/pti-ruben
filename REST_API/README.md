@@ -125,21 +125,23 @@ Test in browser: http://localhost:8080
 For this initial test is practical to run the command this way, in the foreground, and to stop the server with a CTRL+C. Later you may prefer to run the server in the background ("node app.js &").
     
 ### 1.3 URL routing
-    
+
+#### Endpoints
+
 An web API exposes different functionalities. These functionalities are accessed through different HTTP methods (POST, GET, PUT, PATCH or DELETE) and different URL route paths (e.g. '/'). A route path in combination with a request method, define an **endpoint** at which requests can be made. We need a mechanism that let us map endpoints to different functions in our code. Express method "app.METHOD" (e.g. "app.get") allows to specify which function will handle each request depending on the method and the URL route. We already have an endpoint, HTTP GET requests to the '/' path.
 
 Let's modify our app.js to add a new endpoint. Add the following below the app.get('\'...
 
 ```js
-app.get("/myendpoint", (req, res, next) => {
- res.send('Received request at /myendpoint')
+app.get("/students", (req, res, next) => {
+ res.send('Received request at /students')
 });
 ```
-Open http://localhost:8080/myendpoint in your browser.
+Open http://localhost:8080/students in your browser.
 
 #### Route paths
 
-Route paths (such as "/myendpoint") can be strings, string patterns (e.g. "/myendp*"), or even regular expressions. We are not going to address that in detail, if necessary you can find more information [here](https://expressjs.com/en/guide/routing.html).
+Route paths (such as "/students") can be strings, string patterns (e.g. "/stud*"), or even regular expressions. We are not going to address that in detail, if necessary you can find more information [here](https://expressjs.com/en/guide/routing.html).
 
 #### Route parameters
 
@@ -150,9 +152,11 @@ app.get('/students/:studentId', function (req, res) {
     res.send('Received request at /students with param studentId='+req.params.studentId)
 })
 ```
-Add the endpoint to "app.js", relaunch the server and open http://localhost:8080/students/21142250q in your browser.
+Change our previous endpoint within "app.js" accordingly, relaunch the server and open http://localhost:8080/students/21142250q in your browser.
 
 In a trully RESTful API, route parameters are very important. However, in this lab session we will not use them. We will focus on the parameters passed with JSON.
+
+Well, this is enough about routing for now. Express includes more sophisticated routing tools such as the app.route() method or the express.Router class but we are not going to address them here.
    
 ### 1.4. JSON 
 
@@ -160,18 +164,23 @@ Typically an endpoint has to deal with more complex input and output parameters.
 
 #### 1.4.1 A JSON response
 
-Let's modify our webserver.go to include a JSON response.
+Let's modify our endpoint this way to include a JSON response.
 
 ```js
-app.get("/endpoint2", (req, res, next) => {
- res.json(["Tony","Lisa","Michael","Ginger","Food"]);
+app.get("/students", (req, res, next) => {
+    res.json({
+        responseId: 1234,
+        students: [
+            {name: "Jordi", studentId: '12345678a'},
+            {name: "Marta", studentId: '12345678b'}
+    ]});
 });
 ```
-Rebuild, run and open http://localhost:8080/endpoint2 in your browser.
+Relaunch the server and open http://localhost:8080/students in your browser.
 
 Let's try also to call the server with curl:
 
-	curl -H "Content-Type: application/json" http://localhost:8080/endpoint2
+	curl -H "Content-Type: application/json" http://localhost:8080/students
 
 #### 1.4.2 A JSON request
 
