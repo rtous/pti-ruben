@@ -42,7 +42,7 @@ Let's start by updating the Ubuntu's Package Index:
 
 You need 'curl' installed (check it typing 'curl -V' in the terminal). If, for some strange reason, it's not, just do:
 
-    sudo apt-get install curl
+    sudo apt-get install -y curl
 
 ##### Troubleshooting
 
@@ -176,6 +176,8 @@ app.get("/students", (req, res, next) => {
     ]});
 });
 ```
+You can see that passing a JSON document as a response is as simple as passing it as a parameter to the "res.json" method.
+
 Relaunch the server and open http://localhost:8080/students in your browser.
 
 Let's try also to call the server with curl:
@@ -184,64 +186,46 @@ Let's try also to call the server with curl:
 
 #### 1.4.2 A JSON request
 
+Handling JSON requests can be done with the help of the new "express.json()" built-in function (Express 4.16.0 onwards). 
+
 Let's now add a new endpoint that accepts JSON as input. First of all add the following struct:
-```go
-type RequestMessage struct {
-    Field1 string
-    Field2 string
-}
+
+```js
+const express = require('express')
+const app = express()
+const port = 8080
+
+app.use(express.json());
+
+app.post('/newstudent', (req, res, next) => {
+    console.log(req.body.name) 
+    res.end(); 
+}) 
+
+app.listen(port, () => {
+  console.log(`PTI HTTP Server listening at http://localhost:${port}`)
+})
 ```
-And "io" and "io/ioutil" to the imports:
-```go
-import (
-    	"fmt"
-    	"log"
-    	"net/http"
-    	"github.com/gorilla/mux"
-    	"encoding/json"
-	"io"
-	"io/ioutil"
-	) 
-```
-Then add a new route:
-```go
-router.HandleFunc("/endpoint2/{param}", endpointFunc2JSONInput)
-```
-And its related code:
-```go
-func endpointFunc2JSONInput(w http.ResponseWriter, r *http.Request) {
-    var requestMessage RequestMessage
-    body, err := ioutil.ReadAll(io.LimitReader(r.Body, 1048576))
-    if err != nil {
-        panic(err)
+
+Relaunch the server. In order to submit a JSON request we will use curl instead of the browser. Open a new terminal and type:
+
+    curl -H "Content-Type: application/json" -d '{"name":"Fatima", "studentId":"234123412f"}' http://localhost:8080/newstudent
+
+As a result the terminal should show "Fatima". Let's try a more complex example:
+
+```js
+app.post('/newstudent', (req, res, next) => {
+    for(var i in req.body.students){
+        console.log(req.body.students[i].name+'\n');
     }
-    if err := r.Body.Close(); err != nil {
-        panic(err)
-    }
-    if err := json.Unmarshal(body, &requestMessage); err != nil {
-        w.Header().Set("Content-Type", "application/json; charset=UTF-8")
-        w.WriteHeader(422) // unprocessable entity
-        if err := json.NewEncoder(w).Encode(err); err != nil {
-            panic(err)
-        }
-    } else {
-        fmt.Fprintln(w, "Successfully received request with Field1 =", requestMessage.Field1)
-        fmt.Println(r.FormValue("queryparam1"))
-    }
-}
+    res.end(); 
+}) 
 ```
+In the example you can see how to deal with a JSON request including an array. Relaunch the server. In order to submit a JSON request we will use curl instead of the browser. Open a new terminal and type:
 
-*This code involves some tricky error handling. [Go’s approach to error handling](https://blog.golang.org/error-handling-and-go) is one of its most controversial features. Go functions support multiple return values, and by convention, this ability is commonly used to return the function’s result along with an error variable. By convention, returning an error signals the caller there was a problem, and returning nil represents no error. The panic built-in function stops the execution of the function and, in a cascading way, of the chain of caller functions, thus stopping the program.*
+    curl -H "Content-Type: application/json" -d '{"students": [{"name": "Fatima", "studentId": "234123412f"}, {"name": "Maria", "studentId":"16553412g"}]}' http://localhost:8080/newstudent
 
-Rebuild and run. In order to submit a JSON request we will use curl instead of the browser. Open a new terminal and type:
-
-    curl -H "Content-Type: application/json" -d '{"Field1":"Value1", "Field2":"Value2"}' http://localhost:8080/endpoint2/1234?queryparam1=Value3
-
-(while curl is enough for this session, for your project you could take a look at [POSTMAN](https://www.getpostman.com/))
-
-**WARNING: The fields of the request and response structs MUST START WITH A CAPITAL LETTER.**
-
-**WARNING: The fields of the request and response structs MUST ONLY INCLUDE ALPHANUMERIC CHARACTERS (AVOID UNDERSCORES, ETC.).**
+*NOTE: while curl is enough for this session, for your project you could take a look at [POSTMAN](https://www.getpostman.com/)*
 
 
 ## 2 Lab assignment 
