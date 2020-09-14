@@ -13,6 +13,8 @@ Each group will have to:
 3. Extensions: Optionally complete one of the suggested extensions.
 4. Write a .pdf report describing the steps taken to complete the assignment, including screenshots of the application output.
 
+*NOTE: The tutorial can be followed even if you don't have previous knowledge about JavaScript/Node.js.*
+
 *NOTE: The tutorial was tested with Node.js 14.10.1 and Express 4.17.*
 
 ## 1 Making a Web API with Node.js, a quick tutorial
@@ -65,6 +67,7 @@ Create a directory to contain your application:
 
     cd
     mkdir myapp
+    cd myapp
 
 Create a package.json file that will register the dependencies of your application (more information [here](https://docs.npmjs.com/files/package.json)). Run the following and press RETURN to accept all default values:
 
@@ -84,9 +87,9 @@ We can check which version of Express we installed by typing:
     
 A web API is a specific type of web (HTTP-based) service. Let's start by programming a basic web server with Node.js:   
 
-Edit $HOME/myapp/app.js
+Edit a new file named "app.js" within $HOME/myapp with this content:
 
-```nodejs
+```js
 const express = require('express')
 const app = express()
 const port = 8080
@@ -96,11 +99,20 @@ app.get('/', (req, res) => {
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`PTI HTTP Server listening at http://localhost:${port}`)
 })
 ```
 
-This example defines a (callback) route handler function for HTTP GET requests to the site root ('/').
+This example:
+
+1. Creates an Express "application" with the express() function. 
+2. With a call to the app.get method specifies that HTTP GET requests to the '/' path will be handled by a [callback function](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) that sends 'Hello World!' back to the client who issued the request (e.g. a browser).
+3. Starts a UNIX socket and listens for connections on the port 8080 
+
+*NOTE: In JavaScript "=>" is more concise way for defining a function (more details [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions))"
+
+*NOTE: In JavaScript "=>" is more concise way for defining a function (more details [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions))"
+
 https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Introduction
 
 Let's launch the server:
