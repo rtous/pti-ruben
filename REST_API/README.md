@@ -17,6 +17,13 @@ Each group will have to:
 
 *NOTE: The tutorial was tested with Node.js 14.10.1 and Express 4.17.*
 
+## Some useful links 
+
+- [JavaScript tutorials and reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
+- [Node.js guides](https://nodejs.org/en/docs/guides/) 
+- [Express guide](https://expressjs.com/en/guide/routing.html)
+
+
 ## 1 Making a Web API with Node.js, a quick tutorial
 
 ### 1.1 Setup
@@ -109,19 +116,15 @@ This example:
 2. With a call to the app.get method specifies that HTTP GET requests to the '/' path will be handled by a [callback function](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) that sends 'Hello World!' back to the client who issued the request (e.g. a browser).
 3. Starts a UNIX socket and listens for connections on the port 8080 
 
-*NOTE: In JavaScript "=>" is more concise way for defining a function (more details [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions))"
-
-*NOTE: In JavaScript "=>" is more concise way for defining a function (more details [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions))"
-
-https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Introduction
+*NOTE: In JavaScript "=>" is more concise way for defining a function (more details [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions))*
 
 Let's launch the server:
 
-    node app.js &
+    node app.js 
 
-test in browser: http://localhost:8080
+Test in browser: http://localhost:8080
 
-Kill the process before going through the next steps.
+For this initial test is practical to run the command this way, in the foreground, and to stop the server with a CTRL+C. Later you may prefer to run the server in the background ("node app.js &").
     
 ### 1.3 URL routing
 
