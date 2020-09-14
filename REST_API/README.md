@@ -30,11 +30,9 @@ Each group will have to:
 
 [(help for those wanting to use their own computers (through Docker))](./../docker.md)
 
-#### 1.1.1 Booting the machine 
+#### 1.1.1 Booting the machine (Operating Systems room)
 
-Conventional room: Select a 64-bit Linux image and login with your credentials.
-
-Operating Systems room: Select the latest Ubuntu imatge with credentials user=alumne and pwd:=sistemes
+Select the latest Ubuntu imatge with credentials user=alumne and pwd:=sistemes
 
 #### 1.1.2 Prerequisites
 
@@ -114,11 +112,11 @@ This example:
 
 1. Creates an Express "application" with the express() function. 
 2. With a call to the app.get method specifies that HTTP GET requests to the '/' path will be handled by a [callback function](https://developer.mozilla.org/en-US/docs/Glossary/Callback_function) that sends 'Hello World!' back to the client who issued the request (e.g. a browser).
-3. Starts a UNIX socket and listens for connections on the port 8080 
+3. Starts a UNIX socket and listens for connections on the port 8080. 
 
-*NOTE: In JavaScript "=>" is more concise way for defining a function (more details [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions))*
+*NOTE: In JavaScript "=>" is more concise way for defining a function (more details [here](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Functions/Arrow_functions)).*
 
-Let's launch the server:
+Let's now launch the server:
 
     node app.js 
 
@@ -127,26 +125,34 @@ Test in browser: http://localhost:8080
 For this initial test is practical to run the command this way, in the foreground, and to stop the server with a CTRL+C. Later you may prefer to run the server in the background ("node app.js &").
     
 ### 1.3 URL routing
-
-https://expressjs.com/en/guide/routing.html
     
-An web API exposes different functionalities. These functionalities are accessed through different HTTP methods (POST, GET, PUT, PATCH or DELETE) and URL routes or endpoints. We need a mechanism that let us map the requests received by the server to different functions in our code. 
+An web API exposes different functionalities. These functionalities are accessed through different HTTP methods (POST, GET, PUT, PATCH or DELETE) and different URL route paths (e.g. '/'). A route path in combination with a request method, define an **endpoint** at which requests can be made. We need a mechanism that let us map endpoints to different functions in our code. Express method "app.METHOD" (e.g. "app.get") allows to specify which function will handle each request depending on the method and the URL route. We already have an endpoint, HTTP GET requests to the '/' path.
 
-Let's modify our app.js and add the following below the app.get('\'...
+Let's modify our app.js to add a new endpoint. Add the following below the app.get('\'...
+
 ```js
-app.get("/endpoint1", (req, res, next) => {
- res.send('Received request at /endpoint1')
+app.get("/myendpoint", (req, res, next) => {
+ res.send('Received request at /myendpoint')
 });
 ```
-Open http://localhost:8080/endpoint1 in your browser.
+Open http://localhost:8080/myendpoint in your browser.
 
-URL 
+#### Route paths
+
+Route paths (such as "/myendpoint") can be strings, string patterns (e.g. "/myendp*"), or even regular expressions. We are not going to address that in detail, if necessary you can find more information [here](https://expressjs.com/en/guide/routing.html).
+
+#### Route parameters
+
+Sometimes, some segments of the URL contain values that are relevant to process the request (e.g. "/students/21142250q"). To address these situations you can specify the route parameters in the path of the route as shown in this example:
+
 ```js
-app.get("/endpoint1/*", (req, res, next) => {
- res.send('Received request at /endpoint1 and the path is '+req.path) 
-});
+app.get('/students/:studentId', function (req, res) {
+    res.send('Received request at /students with param studentId='+req.params.studentId)
+})
 ```
-Open http://localhost:8080/endpoint1 in your browser.
+Add the endpoint to "app.js", relaunch the server and open http://localhost:8080/students/21142250q in your browser.
+
+In a trully RESTful API, route parameters are very important. However, in this lab session we will not use them. We will focus on the parameters passed with JSON.
    
 ### 1.4. JSON 
 
