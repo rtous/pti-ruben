@@ -13,6 +13,8 @@ Each group will have to:
 3. Extensions: Optionally complete one of the suggested extensions.
 4. Write a .pdf report describing the steps taken to complete the assignment, including screenshots of the application output.
 
+*NOTE: The tutorial was tested with Node.js 14.10.1 and Express 4.17.*
+
 ## 1 Making a Web API with Node.js, a quick tutorial
 
 ### 1.1 Setup
@@ -72,7 +74,11 @@ Now install Express in the myapp directory and save it in the dependencies list:
 
 	npm install express --save
 
-The save flag will add Express as a dependency within the package.json file. 
+The save flag will add Express as a dependency within the package.json file.
+
+We can check which version of Express we installed by typing:
+
+    npm list 
 
 ### 1.2 A simple web server
     
@@ -106,11 +112,13 @@ test in browser: http://localhost:8080
 Kill the process before going through the next steps.
     
 ### 1.3 URL routing
+
+https://expressjs.com/en/guide/routing.html
     
 An web API exposes different functionalities. These functionalities are accessed through different HTTP methods (POST, GET, PUT, PATCH or DELETE) and URL routes or endpoints. We need a mechanism that let us map the requests received by the server to different functions in our code. 
 
 Let's modify our app.js and add the following below the app.get('\'...
-```nodejs
+```js
 app.get("/endpoint1", (req, res, next) => {
  res.send('Received request at /endpoint1')
 });
@@ -118,7 +126,7 @@ app.get("/endpoint1", (req, res, next) => {
 Open http://localhost:8080/endpoint1 in your browser.
 
 URL 
-```nodejs
+```js
 app.get("/endpoint1/*", (req, res, next) => {
  res.send('Received request at /endpoint1 and the path is '+req.path) 
 });
@@ -133,16 +141,16 @@ Typically an endpoint has to deal with more complex input and output parameters.
 
 Let's modify our webserver.go to include a JSON response.
 
-```nodejs
-app.get("/url", (req, res, next) => {
+```js
+app.get("/endpoint2", (req, res, next) => {
  res.json(["Tony","Lisa","Michael","Ginger","Food"]);
 });
 ```
-Rebuild, run and open http://localhost:8080/endpoint/1234 in your browser.
+Rebuild, run and open http://localhost:8080/endpoint2 in your browser.
 
 Let's try also to call the server with curl:
 
-	curl -H "Content-Type: application/json" http://localhost:8080/endpoint/1234
+	curl -H "Content-Type: application/json" http://localhost:8080/endpoint2
 
 #### 1.4.2 A JSON request
 
