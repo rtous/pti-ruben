@@ -17,6 +17,9 @@ Each group will have to:
 
 *NOTE: The tutorial was tested with Node.js 14.10.1 and Express 4.17.*
 
+
+https://www.smashingmagazine.com/2018/01/understanding-using-rest-api/
+
 ## Some useful links 
 
 - [JavaScript tutorials and reference](https://developer.mozilla.org/en-US/docs/Web/JavaScript)
@@ -247,7 +250,7 @@ In order to keep the rentals data (to be able to list them) you will need to sav
 
 In order to obtain the maximum grade you can complete any of the following extensions: 
 
-* Add to the report a 1-page explanation of the pros and cons of Go compared to another alternative (e.g. C++, Java, Rust, etc.).
+* Add to the report a 1-page explanation of the pros and cons of Node.js compared to another alternative (e.g. Java servlets, etc.).
 * Dockerize your web application. Some help [here](./dockerize.md).
 
 ## 3.  Submission
