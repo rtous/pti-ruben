@@ -64,7 +64,7 @@ Create a directory to contain your application:
     cd
     mkdir myapp
 
-Create a package.json file that will register the dependencies of your application (more information [here](https://docs.npmjs.com/files/package.json). Run the following and press RETURN to accept all default values:
+Create a package.json file that will register the dependencies of your application (more information [here](https://docs.npmjs.com/files/package.json)). Run the following and press RETURN to accept all default values:
 
 	npm init
 
@@ -72,21 +72,18 @@ Now install Express in the myapp directory and save it in the dependencies list:
 
 	npm install express --save
 
+The save flag will add Express as a dependency within the package.json file. 
 
 ### 1.2 A simple web server
     
 A web API is a specific type of web (HTTP-based) service. Let's start by programming a basic web server with Node.js:   
-
-Create a directory for this program:
-
-    mkdir $HOME/go/src/pti_golang/webserver
 
 Edit $HOME/myapp/app.js
 
 ```nodejs
 const express = require('express')
 const app = express()
-const port = 3000
+const port = 8080
 
 app.get('/', (req, res) => {
   res.send('Hello World!')
@@ -96,6 +93,9 @@ app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
 ```
+
+This example defines a (callback) route handler function for HTTP GET requests to the site root ('/').
+https://developer.mozilla.org/en-US/docs/Learn/Server-side/Express_Nodejs/Introduction
 
 Let's launch the server:
 
@@ -107,45 +107,23 @@ Kill the process before going through the next steps.
     
 ### 1.3 URL routing
     
-An web API exposes different functionalities. These functionalities are accessed through different URL routes or endpoints. We need a mechanism that let us map URL routes into calls to different functions in our code. The standard golang library offers a [too complex routing mechanism](https://husobee.github.io/golang/url-router/2015/06/15/why-do-all-golang-url-routers-suck.html), so we will use an external library for that (mux router from the Gorilla Web Toolkit):
+An web API exposes different functionalities. These functionalities are accessed through different HTTP methods (POST, GET, PUT, PATCH or DELETE) and URL routes or endpoints. We need a mechanism that let us map the requests received by the server to different functions in our code. 
 
-    go get "github.com/gorilla/mux"
-
-(check that a new package object has been created within $HOME/go/pkg).
-
-Let's modify our webserver.go to add some routes:
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-    "net/http"
-    "github.com/gorilla/mux"
-)
-
-func main() {
-
-router := mux.NewRouter().StrictSlash(true)
-router.HandleFunc("/", Index)
-router.HandleFunc("/endpoint/{param}", endpointFunc)
-
-log.Fatal(http.ListenAndServe(":8080", router))
-}
-
-func Index(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, "Service OK")
-}
-
-func endpointFunc(w http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r)
-    param := vars["param"]
-    fmt.Fprintln(w, "You are calling with param:", param)
-}
+Let's modify our app.js and add the following below the app.get('\'...
+```nodejs
+app.get("/endpoint1", (req, res, next) => {
+ res.send('Received request at /endpoint1')
+});
 ```
-Rebuild, run and open http://localhost:8080/endpoint/1234 in your browser.
+Open http://localhost:8080/endpoint1 in your browser.
 
-**WARNING: The Go compiler does not report warnings, only errors that prevent compilation (e.g. for unused variables or package imports). If you don't fix them the binaries will not be updated.**
+URL 
+```nodejs
+app.get("/endpoint1/*", (req, res, next) => {
+ res.send('Received request at /endpoint1 and the path is '+req.path) 
+});
+```
+Open http://localhost:8080/endpoint1 in your browser.
    
 ### 1.4. JSON 
 
@@ -155,41 +133,10 @@ Typically an endpoint has to deal with more complex input and output parameters.
 
 Let's modify our webserver.go to include a JSON response.
 
-```go
-package main
-
-import (
-    "fmt"
-    "log"
-    "net/http"
-    "github.com/gorilla/mux"
-    "encoding/json"
-)
-
-type ResponseMessage struct {
-    Field1 string
-    Field2 string
-}
-
-func main() {
-
-router := mux.NewRouter().StrictSlash(true)
-router.HandleFunc("/", Index)
-router.HandleFunc("/endpoint/{param}", endpointFunc)
-
-log.Fatal(http.ListenAndServe(":8080", router))
-}
-
-func Index(w http.ResponseWriter, r *http.Request) {
-    fmt.Fprintln(w, "Service OK")
-}
-
-func endpointFunc(w http.ResponseWriter, r *http.Request) {
-    vars := mux.Vars(r)
-    param := vars["param"]
-    res := ResponseMessage{Field1: "Text1", Field2: param}
-    json.NewEncoder(w).Encode(res)
-}
+```nodejs
+app.get("/url", (req, res, next) => {
+ res.json(["Tony","Lisa","Michael","Ginger","Food"]);
+});
 ```
 Rebuild, run and open http://localhost:8080/endpoint/1234 in your browser.
 
