@@ -163,7 +163,7 @@ Well, this is enough about routing for now. Express includes more sophisticated 
    
 ### 1.4. JSON 
 
-Typically an endpoint has to deal with more complex input and output parameters. This is usually solved by formatting the parameters (input and/or output) with JSON. 
+Typically, an endpoint has to deal with more complex input and output parameters. This is usually solved by formatting the parameters (input and/or output) with JSON. 
 
 #### 1.4.1 A JSON response
 
@@ -224,7 +224,7 @@ app.post('/newstudent', (req, res, next) => {
     res.end(); 
 }) 
 ```
-In the example you can see how to deal with a JSON request including an array. Relaunch the server. In order to submit a JSON request we will use curl instead of the browser. Open a new terminal and type:
+In the example you can see how to deal with a JSON request including an array. Relaunch the server. Open a new terminal and type:
 
     curl -H "Content-Type: application/json" -d '{"students": [{"name": "Fatima", "studentId": "234123412f"}, {"name": "Maria", "studentId":"16553412g"}]}' http://localhost:8080/newstudent
 
