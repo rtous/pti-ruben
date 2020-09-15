@@ -243,7 +243,7 @@ As an example web API you will create a simple car rental web API. It will consi
  
 - Request the list of all rentals: An endpoint that will return the list of all saved rental orders (in JSON format). 
 
-In order to keep the rentals data (to be able to list them) you will need to save the data to the disk. A single text file where each line represents a rental will be enough (though not in a real scenario). ANNEX 1 and ANNEX 2 provide help for witing and reading comma-separated values to/from a CSV file.
+In order to keep the rentals data (to be able to list them) you will need to save the data to the disk. A single JSON file will be enough (though not in a real scenario). ANNEX 1 provide help for manipulating JSON files with JavaScript.
 
 
 ### 2.2 Extension (1 point)
@@ -261,55 +261,31 @@ You need to upload the following files to your BSCW's lab group folder before th
 * A .pdf with a report describing the steps taken to complete the assignment, including screenshots of the application output.   
 
 
-## ANNEX 1. Writing comma-separated values to a CSV file
+## ANNEX 1. Reading, manipulating and writing a JSON file in JavaScript
 
-An easy way to save the list of rentals could be a text file with lines containing comma-separated values (CSV). One rental per line. This way you can save a new rental just adding a line at the end of the file.
+An easy way to save the list of rentals could be a JSON file (not a good idea for a real web API but enough for this session). The following code is an example of how to read/write a JSON document from/to a file and how to modify and display it once in memory.  
 
-	(need to add "encoding/csv" and "os" to imports)
-```go
-func writeToFile(w http.ResponseWriter, values []string) {
-    file, err := os.OpenFile("rentals.csv", os.O_APPEND|os.O_WRONLY|os.O_CREATE, 0600)
-    if err!=nil {
-        json.NewEncoder(w).Encode(err)
-        return
-        }
-    writer := csv.NewWriter(file)
-    writer.Write(values)
-    writer.Flush()
-    file.Close()
+```js
+const fs = require('fs');
+
+//Create an empty JSON document in memory and save it to a file (students.json)
+studentsJSON = {"students": []};
+fs.writeFileSync("students.json", JSON.stringify(studentsJSON));
+
+//Read a JSON document from a file
+studentsFileRawData = fs.readFileSync('students.json');
+studentsJSON = JSON.parse(studentsFileRawData);
+
+//Add something to the (in memory) JSON document
+studentsJSON['students'].push({"name": "Marc", "studentId": "12341231h"});
+
+//Display the contents of the array within a JSON document
+for(var i in studentsJSON['students']){
+    console.log(studentsJSON['students'][i].name+'\n');
 }
+
+//Write the (modified) JSON document into a file
+fs.writeFileSync("students.json", JSON.stringify(studentsJSON));
 ```
 
-Yoy may call your function from endpointFunc2JSONInput this way:
-
-```go
-writeToFile(w, []string{requestMessage.Field1, requestMessage.Field2})
-```
-
-If you don't specify a file path the file will be saved in the directory from which you launch the command. 
-
-## ANNEX 2. Reading a CSV file
-
-In order to read all the lines from a CSV file and to put them within a JSON response you can do:
-
-```go
-var rentalsArray []ResponseMessage
-file, err := os.Open("rentals.csv", )
-if err != nil {
-    log.Fatal(err)
-} 
-reader := csv.NewReader(file)
-for {
-    line, err := reader.Read()
-    if err != nil {
-        if err == io.EOF {
-            break
-        }
-        log.Fatal(err)
-    }
-    rentalsArray = append(rentalsArray, ResponseMessage{Field1: line[0], Field2: line[1]})
-}
-json.NewEncoder(w).Encode(rentalsArray)
-
-```
      
