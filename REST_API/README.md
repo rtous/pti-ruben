@@ -95,7 +95,7 @@ We can check which version of Express we installed by typing:
     
 A web API is a specific type of web (HTTP-based) service. Let's start by programming a basic web server with Node.js:   
 
-Edit a new file named "app.js" within $HOME/myapp with this content:
+Edit a new file named "server.js" within $HOME/myapp with this content:
 
 ```js
 const express = require('express')
@@ -121,11 +121,11 @@ This example:
 
 Let's now launch the server:
 
-    node app.js 
+    node server.js 
 
 Test in browser: http://localhost:8080
 
-For this initial test is practical to run the command this way, in the foreground, and to stop the server with a CTRL+C. Later you may prefer to run the server in the background ("node app.js &").
+For this initial test is practical to run the command this way, in the foreground, and to stop the server with a CTRL+C. Later you may prefer to run the server in the background ("node server.js &").
     
 ### 1.3 URL routing
 
@@ -133,7 +133,7 @@ For this initial test is practical to run the command this way, in the foregroun
 
 An web API exposes different functionalities. These functionalities are accessed through different HTTP methods (POST, GET, PUT, PATCH or DELETE) and different URL route paths (e.g. '/'). A route path in combination with a request method, define an **endpoint** at which requests can be made. We need a mechanism that let us map endpoints to different functions in our code. Express method "app.METHOD" (e.g. "app.get") allows to specify which function will handle each request depending on the method and the URL route. We already have an endpoint, HTTP GET requests to the '/' path.
 
-Let's modify our app.js to add a new endpoint. Add the following below the app.get('\'...
+Let's modify our server.js to add a new endpoint. Add the following below the app.get('\'...
 
 ```js
 app.get("/students", (req, res, next) => {
@@ -155,7 +155,7 @@ app.get('/students/:studentId', function (req, res) {
     res.send('Received request at /students with param studentId='+req.params.studentId)
 })
 ```
-Change our previous endpoint within "app.js" accordingly, relaunch the server and open http://localhost:8080/students/21142250q in your browser.
+Change our previous endpoint within "server.js" accordingly, relaunch the server and open http://localhost:8080/students/21142250q in your browser.
 
 In a trully RESTful API, route parameters are very important. However, in this lab session we will not use them. We will focus on the parameters passed with JSON.
 
@@ -191,7 +191,7 @@ Let's try also to call the server with curl:
 
 Handling JSON requests can be done with the help of the new "express.json()" built-in function (Express 4.16.0 onwards). 
 
-Let's now add a new endpoint that accepts JSON as input. First of all add the following struct:
+Let's now add a new endpoint (POST method and "/newstudent" route path) that accepts JSON as input. The 
 
 ```js
 const express = require('express')
@@ -230,6 +230,9 @@ In the example you can see how to deal with a JSON request including an array. R
 
 *NOTE: while curl is enough for this session, for your project you could take a look at [POSTMAN](https://www.getpostman.com/)*
 
+<!--
+### 1.5. Making it "RESTful" 
+-->
 
 ## 2 Lab assignment 
 
