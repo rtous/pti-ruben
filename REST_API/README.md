@@ -131,7 +131,7 @@ For this initial test is practical to run the command this way, in the foregroun
 
 #### Endpoints
 
-An web API exposes different functionalities. These functionalities are accessed through different HTTP methods (POST, GET, PUT, PATCH or DELETE) and different URL route paths (e.g. '/'). A route path in combination with a request method, define an **endpoint** at which requests can be made. We need a mechanism that let us map endpoints to different functions in our code. Express method "app.METHOD" (e.g. "app.get") allows to specify which function will handle each request depending on the method and the URL route. We already have an endpoint, HTTP GET requests to the '/' path.
+A web API exposes different functionalities. These functionalities are accessed through different HTTP methods (POST, GET, PUT, PATCH or DELETE) and different URL route paths (e.g. '/'). A route path in combination with a request method, define an **endpoint** at which requests can be made. We need a mechanism that let us map endpoints to different functions in our code. Express method "app.METHOD" (e.g. "app.get") allows to specify which function will handle each request depending on the method and the URL route. We already have an endpoint, HTTP GET requests to the '/' path.
 
 Let's modify our server.js to add a new endpoint. Add the following below the app.get('\'...
 
