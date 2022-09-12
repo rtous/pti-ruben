@@ -1,7 +1,9 @@
 # Making a Web API with Node.js
 
+
 ## Introduction
 
+<!--*NOTE: This lab replaces a previous version which relied on using Go instead of Node.js. If, for some reason, you prefer to develop your web API with Go instead of Node.js, you are allowed to do it. The documentation is [here](./goREST/README.md).*-->
 A web service is a generic term for a software function that is accessible through HTTP. Traditional web services usually relied in support protocols for data exchange (e.g. SOAP) and service definition (WSDL). However, nowadays the paradigm has evolved to a simplified form, usually called web APIs. Web APIs normally rely only in plain HTTP (plus JSON for serializing the messages). Their design is usually influenced by the [REST architectural style](https://en.wikipedia.org/wiki/Representational_state_transfer), though the most part of existing web APIs do not really comply with REST principles. Nowadays, the most part of client-server systems (e.g. web applications and mobile apps) design their back end as a combination of web APIs.  
 
 The goal of this session is to create a simple web API with the Node.js JavaScript runtime environment. We will not bother to follow the REST principles, so it will not be a trully RESTful API.  
@@ -18,7 +20,7 @@ Each group will have to:
 *NOTE: The tutorial was tested with Node.js 14.10.1 and Express 4.17.*
 
 
-https://www.smashingmagazine.com/2018/01/understanding-using-rest-api/
+<!--https://www.smashingmagazine.com/2018/01/understanding-using-rest-api/-->
 
 ## Some useful links 
 
@@ -31,7 +33,7 @@ https://www.smashingmagazine.com/2018/01/understanding-using-rest-api/
 
 ### 1.1 Setup
 
-[(help for those wanting to use their own computers (through Docker))](./../docker.md)
+[Read this if you will do this lab on your own computer](./../yourmachine.md).
 
 #### 1.1.1 Booting the machine (Operating Systems room)
 
@@ -43,7 +45,7 @@ Let's start by updating the Ubuntu's Package Index:
 
     sudo apt-get update
 
-You need 'curl' installed (check it typing 'curl -V' in the terminal). If, for some strange reason, it's not, just do:
+You need cURL installed (check it typing 'curl -V' in the terminal). If, for some strange reason, it's not, just do:
 
     sudo apt-get install -y curl
 
@@ -179,19 +181,23 @@ app.get("/students", (req, res, next) => {
     ]});
 });
 ```
-You can see that passing a JSON document as a response is as simple as passing it as a parameter to the "res.json" method.
+You can see that returning a JSON document as a response is as simple as passing it as a parameter to the "res.json" method.
 
 Relaunch the server and open http://localhost:8080/students in your browser.
 
-Let's try also to call the server with curl:
+Let's try also to call the server with cURL:
 
+```
 	curl -H "Content-Type: application/json" http://localhost:8080/students
+```
 
 #### 1.4.2 A JSON request
 
 Handling JSON requests can be done with the help of the new "express.json()" built-in function (Express 4.16.0 onwards). 
 
-Let's now add a new endpoint (POST method and "/newstudent" route path) that accepts JSON as input. The 
+Let's now add a new endpoint (POST method and "/newstudent" route path) that accepts JSON as input. 
+
+*WARNING: Do not forget to add "app.use(express.json());" or it will not parse the incoming JSON payload.* 
 
 ```js
 const express = require('express')
@@ -201,7 +207,7 @@ const port = 8080
 app.use(express.json());
 
 app.post('/newstudent', (req, res, next) => {
-    console.log(req.body.name) 
+    console.log(req.body.name);
     res.end(); 
 }) 
 
@@ -210,11 +216,23 @@ app.listen(port, () => {
 })
 ```
 
-Relaunch the server. In order to submit a JSON request we will use curl instead of the browser. Open a new terminal and type:
+Relaunch the server. In order to submit a JSON request we will use cURL instead of the browser. Open a new terminal and type:
 
+```
     curl -H "Content-Type: application/json" -d '{"name":"Fatima", "studentId":"234123412f"}' http://localhost:8080/newstudent
+```
 
-As a result the terminal should show "Fatima". Let's try a more complex example:
+As a result the terminal (the server one) should show "Fatima". 
+
+*NOTE: You can see what the server is receiving by replacing "console.log(req.body.name);" by "console.log(req);" or "console.log(req.body);".* 
+
+This time we did not return any HTTP message body. By default, the res.end() will return a response message with an HTTP 200 OK success status response code. You can check the returned HTTP header adding the "-i" option to wour cURL command:
+
+```
+    curl -i -H "Content-Type: application/json" -d '{"name":"Fatima", "studentId":"234123412f"}' http://localhost:8080/newstudent
+```
+
+Let's try a more complex example:
 
 ```js
 app.post('/newstudent', (req, res, next) => {
@@ -226,12 +244,32 @@ app.post('/newstudent', (req, res, next) => {
 ```
 In the example you can see how to deal with a JSON request including an array. Relaunch the server. Open a new terminal and type:
 
-    curl -H "Content-Type: application/json" -d '{"students": [{"name": "Fatima", "studentId": "234123412f"}, {"name": "Maria", "studentId":"16553412g"}]}' http://localhost:8080/newstudent
+```
+    curl -i -H "Content-Type: application/json" -d '{"students": [{"name": "Fatima", "studentId": "234123412f"}, {"name": "Maria", "studentId":"16553412g"}]}' http://localhost:8080/newstudent
+```
 
-*NOTE: while curl is enough for this session, for your project you could take a look at [POSTMAN](https://www.getpostman.com/)*
+But normally a POST request will have some effect over the state of the server (e.g. adding something to a DB). In those cases, it's conveneint to return back a 201 HTTP status response code (which means "created"). You can do that with the "res.status" function:
+
+```js
+    ...
+    res.status(201);
+    res.end();
+    ...
+```
+Try it and check that the status response code is 201.
+
+*NOTE: while cURL is enough for this session, for your project you could take a look at [POSTMAN](https://www.getpostman.com/)*
 
 <!--
-### 1.5. Making it "RESTful" 
+### 1.5. Making our web API "RESTful" 
+
+When developing a web API we may want to follow the [REST architectural style](https://en.wikipedia.org/wiki/Representational_state_transfer). Many people use the term "REST API" or "RESTful" API incorrectly, just to refer to any web API. A RESTful API follows a set of patterns when designing the API endpoints (HTTP method, HTTP status response code, etc.). The benefits of REST are controversial (many relevant web APIs are not RESTful), but it's convenient to know it to be able to understand any API specification. 
+
+#### Using the proper HTTP method
+
+The endpoints of a REST API must use an HTTP method consistent with the type of actions that they perform. People from databases tend to talk about four types of actions: Create, Read, Update and Delete (CRUD). The proper HTTP methods to apply to these actions are POST, GET, PUT (or PATCH) and DELETE, respectively. 
+
+
 -->
 
 ## 2 Lab assignment 
@@ -242,11 +280,11 @@ In the example you can see how to deal with a JSON request including an array. R
 
 As an example web API you will create a simple car rental web API. It will consist in two functionalities:
 
-- Request a new rental: An endpoint to register a new rental order. Input fields will include the car maker, car model, number of days and number of units. The total price of the rental will be returned to the user along with the data of the requested rental.
+- Request a new rental: An endpoint to register a new rental order. Input fields will include the car maker, car model, number of days and number of units (in JSON format). The endpoint should just return an HTTP status response code 201. 
  
 - Request the list of all rentals: An endpoint that will return the list of all saved rental orders (in JSON format). 
 
-In order to keep the rentals data (to be able to list them) you will need to save the data to the disk. A single JSON file will be enough (though not in a real scenario). ANNEX 1 provide help for manipulating JSON files with JavaScript.
+In order to keep the rentals data (to be able to list them) you will need to save the data to the disk. A single JSON file will be enough (though not in a real scenario). ANNEX 1 provides help for manipulating JSON files with JavaScript.
 
 
 ### 2.2 Extension (1 point)
