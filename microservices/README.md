@@ -93,7 +93,7 @@ On both:
 
 ### 2.2. Launch a (Minikube) Kubernetes cluster
 
-On Linux (bare-metal execution):
+<!--On Linux (bare-metal execution):
 
 	sudo apt-get install conntrack
 	sudo minikube --vm-driver=none start
@@ -104,7 +104,10 @@ On Linux (bare-metal execution):
 	export KUBECONFIG=$HOME/admin.conf
 	minikube update-context
 
-On Windows with WSL2, within the Ubuntu terminal:
+	
+
+-->
+On Linux or Windows with WSL2 (within the Ubuntu terminal):
 
 	minikube start
 
@@ -193,9 +196,12 @@ CMD node server.js
 
 In a real scenario you would build your images locally and upload them to Docker Hub or any other registry. In that case, you will have an image's URL to pass to Kubernetes. However, to accelerate things a little bit, here we will skip the usage of a Docker regisry and we will tell Kubernetes to get the images from our local Docker registry.
 
+<!-->
 On Ubuntu, as we used vm-driver=none, we don't need to do anything, as our single-node Kubernetes cluster it's running directly on the host machine. Your local Docker registry will be directly accessible by the Kubernetes commands.
 
 On **macOS and Windows with WSL2**, Minikube uses it's own built-in Docker daemon. So, if you build your images with your local Docker environment, they will not be directly accessible to Minikube. In order to overcome that problem, we will point our Docker commands directly to the Minikube built-in Docker daemon, building our images there, and making them directly accessible to Minikube. To accomplish that just do the following (only on macOS and Windows with WSL2!):
+-->
+Because Minikube uses it's own built-in Docker daemon, if you build your images with your local Docker environment, they will not be directly accessible to Minikube. In order to overcome that problem, we will point our Docker commands directly to the Minikube built-in Docker daemon, building our images there, and making them directly accessible to Minikube. To accomplish that just do the following:
 
 	eval $(minikube docker-env)
 
