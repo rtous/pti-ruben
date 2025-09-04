@@ -1,4 +1,19 @@
 # PTI: Projecte de Tecnologies de la Informació 
+
+## Presentació
+
+[Slides presentació](./presentacio/1_PTI_primer_dia_ruben.pdf)
+
+[Document enunciat projecte/avaluació](./presentacio/doc1_Avaluacio_de_projectes.pdf)
+
+[Document enunciat projecte/ingredients](./presentacio/doc2_PTI_ingredients_projectes_v6.pdf)
+
+[Document enunciat projecte/estructura document proposta](./presentacio/doc3_Estructura_propuesta_proyecto.pdf)
+
+[Exemple informe laboratori](./presentacio/exemple_informe_lab.pdf)
+
+[Exemple document proposta projecte ](./presentacio/exemple_proposta_doc.pdf)
+
 ## Lab sessions
 
 [Session 1. Tomcat Java servlets](./servlets/README.md)
