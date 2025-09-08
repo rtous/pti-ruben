@@ -14,6 +14,8 @@
 
 [Exemple document proposta projecte ](./presentacio/exemple_proposta_doc.pdf)
 
+[Exemple projectes ](./presentacio/4_PTI_EjemplosProyectos_2025_26_Q1.pdf)
+
 ## Lab sessions
 
 [Session 1. Tomcat Java servlets](./servlets/README.md)
